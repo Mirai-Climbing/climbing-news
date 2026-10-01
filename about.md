@@ -19,7 +19,7 @@ permalink: /about/
 - 一般に公開されていない岩場の場所は載せません。
 
 ## 間違いや載せてほしい話
-AIがまとめているので、間違いがあるかもしれません。間違いや、載せてほしい話は、[GitHub の Issue](https://github.com/yuzukikondo1020/climbing-news/issues) で知らせてください。
+AIがまとめているので、間違いがあるかもしれません。間違いや、載せてほしい話は、[GitHub の Issue](https://github.com/Mirai-Climbing/climbing-news/issues) で知らせてください。
 
 ## 運営
 クライマー向けのアプリ「Mirai Climbing」を作っている個人が運営しています。試作の段階です。

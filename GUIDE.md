@@ -44,7 +44,7 @@ title: "M月D日のクライミングニュース:(一番大きな話を1つか2
 [元のサイトの名前](元の記事のURL)
 
 ---
-このまとめはAIが作っています。間違いがあれば [Issue](https://github.com/yuzukikondo1020/climbing-news/issues) で知らせてください。
+このまとめはAIが作っています。間違いがあれば [Issue](https://github.com/Mirai-Climbing/climbing-news/issues) で知らせてください。
 ```
 
 ## 4. 上げる
