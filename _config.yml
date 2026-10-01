@@ -1,0 +1,12 @@
+title: クライミングニュース(試作)
+description: 公開されているクライミングのニュースを、AIが毎朝集めて短くまとめます。くわしくは元の記事へ。
+lang: ja
+timezone: Asia/Tokyo
+theme: minima
+permalink: /:year/:month/:day/
+show_excerpts: true
+minima:
+  date_format: "%Y年%m月%d日"
+exclude:
+  - GUIDE.md
+  - README.md
