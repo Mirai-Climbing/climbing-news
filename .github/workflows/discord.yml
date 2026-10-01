@@ -1,0 +1,30 @@
+# 新しいニュースの記事が _posts に足されたら、Discord の #ニュース-news に知らせる。
+# Webhook の URL は、リポジトリの Secrets(DISCORD_WEBHOOK_NEWS)に置く(ここには書かない)。
+name: Discord に知らせる
+on:
+  push:
+    branches: [main]
+    paths: ["_posts/**"]
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: サイトができるのを待つ
+        run: sleep 90
+      - name: 足された記事を知らせる
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_NEWS }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then echo "Webhook がないので知らせない"; exit 0; fi
+          git diff --name-only --diff-filter=A HEAD~1 HEAD -- _posts | while read -r f; do
+            name=$(basename "$f" .md)
+            y=${name:0:4}; m=${name:5:2}; d=${name:8:2}
+            title=$(sed -n 's/^title: *"\{0,1\}\(.*\)"\{0,1\}$/\1/p' "$f" | head -1 | sed 's/"$//')
+            url="https://news.mirai-climbing.com/$y/$m/$d/"
+            jq -n --arg c "📰 **$title**
+          $url" '{content: $c, username: "クライミングニュース"}' |
+              curl -sS -f -H "Content-Type: application/json" -d @- "$WEBHOOK"
+          done
