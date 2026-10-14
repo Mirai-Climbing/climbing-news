@@ -1,0 +1,20 @@
+---
+layout: default
+---
+{%- comment -%}トップの一覧。そのページと同じ言葉(lang)の記事だけを並べる(日本語版と英語版を混ぜない){%- endcomment -%}
+<div class="home">
+  {{ content }}
+  {%- assign posts = site.posts | where: "lang", page.lang -%}
+  {%- if posts.size > 0 -%}
+  <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+  <ul class="post-list">
+    {%- for post in posts -%}
+    <li>
+      <span class="post-meta">{% if page.lang == "en" %}{{ post.date | date: "%B %-d, %Y" }}{% else %}{{ post.date | date: "%Y年%m月%d日" }}{% endif %}</span>
+      <h3><a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
+      {%- if site.show_excerpts -%}{{ post.excerpt }}{%- endif -%}
+    </li>
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
+</div>

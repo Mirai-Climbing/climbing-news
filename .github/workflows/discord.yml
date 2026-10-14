@@ -4,7 +4,7 @@ name: Discord に知らせる
 on:
   push:
     branches: [main]
-    paths: ["_posts/**"]
+    paths: ["_posts/**", "en/_posts/**"]
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -17,14 +17,19 @@ jobs:
       - name: 足された記事を知らせる
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_NEWS }}
+          # 英語版は、DISCORD_WEBHOOK_NEWS_EN があればそちらに(なければ日本語版と同じ所に)
+          WEBHOOK_EN: ${{ secrets.DISCORD_WEBHOOK_NEWS_EN }}
         run: |
           if [ -z "$WEBHOOK" ]; then echo "Webhook がないので知らせない"; exit 0; fi
-          git diff --name-only --diff-filter=A HEAD~1 HEAD -- _posts | while read -r f; do
+          git diff --name-only --diff-filter=A HEAD~1 HEAD -- _posts en/_posts | while read -r f; do
             name=$(basename "$f" .md)
             y=${name:0:4}; m=${name:5:2}; d=${name:8:2}
             title=$(sed -n 's/^title: *"\{0,1\}\(.*\)"\{0,1\}$/\1/p' "$f" | head -1 | sed 's/"$//')
-            url="https://news.mirai-climbing.com/$y/$m/$d/"
+            prefix=""; hook="$WEBHOOK"; who="クライミングニュース"
+            case "$f" in en/*) prefix="/en"; hook="${WEBHOOK_EN:-$WEBHOOK}"; who="Climbing News";; esac
+            if [ -z "$hook" ]; then continue; fi
+            url="https://news.mirai-climbing.com$prefix/$y/$m/$d/"
             jq -n --arg c "**$title**
-          $url" '{content: $c, username: "クライミングニュース"}' |
-              curl -sS -f -H "Content-Type: application/json" -d @- "$WEBHOOK"
+          $url" --arg u "$who" '{content: $c, username: $u}' |
+              curl -sS -f -H "Content-Type: application/json" -d @- "$hook"
           done
